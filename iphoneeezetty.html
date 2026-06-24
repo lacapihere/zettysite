@@ -77,14 +77,17 @@ html.embedded .stage{
   transform:none;
 }
 @media(max-width:420px){
+  /* espacio arriba para que el glow del teléfono se difumine y no se corte duro */
   html.embedded body{
-    padding-top:0;
+    padding-top:60px;
   }
   /* achicar todo el conjunto (teléfono + chips) en móvil para que no quede cortado */
   html.embedded .stage{
     transform:scale(.78);
     transform-origin:top center;
   }
+  /* chip derecho: acercarlo para que no se corte (html.embedded para ganar a la base) */
+  html.embedded .chip-3{right:-12%}
 }
 
 /* stage + chips */
