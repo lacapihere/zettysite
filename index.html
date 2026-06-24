@@ -1687,14 +1687,19 @@ footer{border-top:1px solid var(--line-soft);padding:44px clamp(20px,5vw,64px);p
   .fbar-track{height:26px}
   .sell-anim{margin-left:clamp(16px,6vw,52px);margin-top:20px}
   .sell-word{font-size:clamp(15px,4.5vw,24px)}
+  /* iPhone embed — stacked layout: sits below the text, full phone visible,
+     no negative transform/overlap. max-width ≤420px forces the embed's
+     internal media query (padding-top:0) so the phone anchors to the top */
+  #embudos .phone-frame-shell{margin:0 auto}
+  #embudos .plug-phone-frame{
+    width:100%!important;
+    max-width:380px!important;
+    height:600px!important;
+    margin:8px auto 0!important;
+    transform:none!important;
+  }
 }
 @media(max-width:520px){
-  .plug-phone-frame{
-    width:100%!important;
-    height:520px!important;
-    margin:-180px auto -50px!important;
-    transform:translateY(-220px)!important;
-  }
   .funnel-card{padding:20px 16px}
   .fbar-track{height:22px}
   .embudo-item .n{font-size:15px}
@@ -2968,6 +2973,11 @@ function buildThread(){
   const pts = [];
   document.querySelectorAll('.ta, .node').forEach(el => {
     const target = el.classList.contains('node') ? el.querySelector('.dot') : el;
+    if(!target) return;
+    // ignorar elementos no renderizados (p.ej. nodos ocultos en móvil con display:none)
+    // un rect 0×0 daría coords (0,0) y rompería el inicio del hilo
+    const r = target.getBoundingClientRect();
+    if(r.width === 0 && r.height === 0) return;
     pts.push({ ...centerOf(target), node: el.classList.contains('node') ? el : null });
   });
   pts.sort((a,b) => a.y - b.y);
