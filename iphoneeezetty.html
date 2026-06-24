@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Zetty iPhone</title>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700&family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script>
+if(new URLSearchParams(location.search).get('embed')==='1'){
+  document.documentElement.classList.add('embedded');
+}
+</script>
+<style>
+:root{
+  --glow:#C5E1A1;
+  --glow-dim:rgba(197,225,161,.55);
+  --sage:#7E9468;
+  --muted:#97A091;
+  --faint:#5C665A;
+  --paper:#EEF2E6;
+  --ease:cubic-bezier(.22,.85,.32,1);
+  --ease-spring:cubic-bezier(.34,1.45,.5,1);
+  --mono:'JetBrains Mono',monospace;
+  --body:'Instrument Sans',sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{
+  background:transparent;
+  display:flex;align-items:center;justify-content:center;
+  min-height:100vh;
+  font-family:var(--body);
+  -webkit-font-smoothing:antialiased;
+  overflow:hidden;
+}
+
+/* grain */
+body::before{
+  content:"";position:fixed;inset:0;pointer-events:none;z-index:0;opacity:0;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)' opacity='0.6'/%3E%3C/svg%3E");
+}
+
+/* ambient light behind phone */
+.ambient-wrap{display:none;position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
+.amb{position:absolute;border-radius:50%;filter:blur(100px);opacity:.8}
+.amb-a{
+  width:560px;height:560px;top:50%;left:50%;transform:translate(-10%,-55%);
+  background:radial-gradient(circle,rgba(197,225,161,.14),transparent 65%);
+  animation:drift 16s ease-in-out infinite;
+}
+.amb-b{
+  width:440px;height:440px;top:50%;left:50%;transform:translate(-80%,-30%);
+  background:radial-gradient(circle,rgba(197,225,161,.10),transparent 65%);
+  animation:drift 20s ease-in-out -7s infinite reverse;
+}
+@keyframes drift{
+  0%,100%{transform:translate(-10%,-55%) scale(1)}
+  33%{transform:translate(2%,-65%) scale(1.08)}
+  66%{transform:translate(-18%,-48%) scale(.94)}
+}
+
+/* cursor aura */
+#aura{
+  display:none;position:fixed;width:500px;height:500px;border-radius:50%;pointer-events:none;z-index:1;
+  background:radial-gradient(circle,rgba(197,225,161,.07),transparent 65%);
+  transform:translate(-50%,-50%);filter:blur(50px);
+}
+@media(hover:none){#aura{display:none}}
+html.embedded body::before,
+html.embedded .ambient-wrap,
+html.embedded #aura{display:none}
+html.embedded body{
+  align-items:flex-start;
+  min-height:100%;
+  padding-top:130px;
+}
+html.embedded .stage{
+  transform:none;
+}
+@media(max-width:420px){
+  html.embedded body{
+    padding-top:0;
+  }
+}
+
+/* stage + chips */
+.stage{
+  position:relative;z-index:2;
+  perspective:1400px;
+}
+
+.chip{
+  position:absolute;padding:11px 16px;border-radius:14px;z-index:5;
+  font-family:var(--mono);font-size:11px;letter-spacing:.05em;
+  display:flex;align-items:center;gap:8px;white-space:nowrap;
+  background:linear-gradient(160deg,rgba(197,225,161,.09),rgba(197,225,161,.03) 38%,rgba(197,225,161,.05));
+  border:1px solid rgba(197,225,161,.18);
+  backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
+  box-shadow:inset 0 1px 0 rgba(197,225,161,.12),inset 0 -12px 24px rgba(0,0,0,.3),0 0 28px rgba(197,225,161,.10);
+  animation:floaty 6s ease-in-out infinite;
+  color:var(--paper);
+}
+.chip b{color:var(--glow);font-weight:700}
+.chip-1{top:8%; left:-30%;animation-delay:-1s}
+.chip-2{bottom:20%;left:-38%;animation-delay:-3.5s}
+.chip-3{top:40%;right:-32%;animation-delay:-5s}
+@keyframes floaty{
+  0%,100%{transform:translateY(0) rotate(-.4deg)}
+  50%{transform:translateY(-12px) rotate(.4deg)}
+}
+
+/* iPhone shell */
+.phone{
+  width:280px;
+  position:relative;
+  transform:rotateY(-9deg) rotateX(4deg);
+  transform-style:preserve-3d;
+  transition:transform .25s ease-out;
+  will-change:transform;
+}
+.phone-shell{
+  border-radius:52px;
+  padding:11px;
+  background:linear-gradient(145deg,#2a2a2a 0%,#1a1a1a 20%,#333 35%,#111 50%,#2c2c2c 65%,#1a1a1a 80%,#2a2a2a 100%);
+  box-shadow:
+    0 0 50px rgba(197,225,161,.20),
+    0 0 100px rgba(197,225,161,.08),
+    6px 10px 40px rgba(0,0,0,.85),
+    -2px -2px 12px rgba(255,255,255,.04),
+    inset 0 1px 0 rgba(255,255,255,.15),
+    inset 0 -1px 0 rgba(0,0,0,.6),
+    inset 1px 0 0 rgba(255,255,255,.06),
+    inset -1px 0 0 rgba(0,0,0,.4);
+  transform-style:preserve-3d;
+}
+/* power button */
+.phone-shell::before{
+  content:"";position:absolute;right:-3px;top:28%;
+  width:3px;height:52px;border-radius:0 3px 3px 0;
+  background:linear-gradient(180deg,#333,#222,#333);
+  box-shadow:1px 0 4px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,255,255,.10);
+}
+/* mute + volume */
+.phone-shell::after{
+  content:"";position:absolute;left:-3px;top:18%;
+  width:3px;height:96px;border-radius:3px 0 0 3px;
+  background:linear-gradient(180deg,
+    #2a2a2a 0%,#2a2a2a 22%,transparent 22%,transparent 27%,
+    #2a2a2a 27%,#2a2a2a 58%,transparent 58%,transparent 63%,
+    #2a2a2a 63%,#2a2a2a 100%);
+  box-shadow:-1px 0 4px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,255,255,.08);
+}
+.phone-bezel{
+  border-radius:43px;overflow:hidden;background:#000;
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.04),inset 0 2px 8px rgba(0,0,0,.9);
+}
+
+/* Dynamic Island */
+.dynamic-island{
+  position:absolute;top:12px;left:50%;transform:translateX(-50%);
+  width:110px;height:32px;background:#000;border-radius:20px;z-index:10;
+  display:flex;align-items:center;justify-content:center;gap:8px;
+  box-shadow:0 0 0 1px rgba(255,255,255,.06),inset 0 1px 3px rgba(255,255,255,.04);
+}
+.dynamic-island::before{
+  content:"";width:10px;height:10px;border-radius:50%;
+  background:radial-gradient(circle at 35% 35%,#1a1a1a,#0a0a0a);
+  box-shadow:0 0 0 2px #111,0 0 6px rgba(197,225,161,.2),inset 0 0 3px rgba(0,0,0,.8);
+}
+.dynamic-island::after{
+  content:"";width:6px;height:6px;border-radius:50%;
+  background:var(--glow);
+  box-shadow:0 0 8px var(--glow),0 0 20px rgba(197,225,161,.4);
+  animation:pulse 2.6s ease-in-out infinite;
+}
+@keyframes pulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(.72);opacity:.7}}
+
+/* screen */
+.screen{
+  border-radius:43px;overflow:hidden;background:#0A0E0B;
+  display:flex;flex-direction:column;height:540px;position:relative;
+}
+.screen::before{
+  content:"";position:absolute;inset:0;z-index:20;pointer-events:none;border-radius:inherit;
+  background:linear-gradient(125deg,rgba(255,255,255,.055) 0%,rgba(255,255,255,.015) 20%,transparent 50%,rgba(0,0,0,.04) 100%);
+}
+
+/* WA header */
+.wa-head{
+  margin-top:50px;
+  display:flex;align-items:center;gap:10px;padding:10px 14px 11px;
+  background:rgba(197,225,161,.05);border-bottom:1px solid rgba(197,225,161,.10);
+  backdrop-filter:blur(8px);flex-shrink:0;
+}
+.wa-ava{width:36px;height:36px;border-radius:50%;overflow:hidden;flex-shrink:0;box-shadow:0 0 0 2px rgba(197,225,161,.3)}
+.wa-ava img{width:36px;height:36px;object-fit:cover;display:block}
+.wa-name{font-weight:600;font-size:13.5px;line-height:1.2;color:var(--paper)}
+.wa-status{font-size:10.5px;color:var(--glow);display:flex;align-items:center;gap:5px}
+.wa-status::before{content:"";width:5px;height:5px;border-radius:50%;background:var(--glow);box-shadow:0 0 8px var(--glow)}
+
+/* chat body */
+.wa-body{
+  flex:1;padding:14px 12px;display:flex;flex-direction:column;gap:8px;
+  overflow:hidden;justify-content:flex-end;
+  background:radial-gradient(80% 50% at 70% 0%,rgba(197,225,161,.05),transparent);
+}
+
+/* bubbles */
+.msg{
+  max-width:82%;padding:8px 12px;border-radius:14px;font-size:12.5px;line-height:1.45;
+  opacity:0;transform:translateY(12px) scale(.96);
+  animation:msgin .5s var(--ease-spring) forwards;
+  box-shadow:0 4px 12px rgba(0,0,0,.3),inset 0 1px 0 rgba(197,225,161,.07);
+  color:var(--paper);
+}
+@keyframes msgin{to{opacity:1;transform:none}}
+.msg.in{align-self:flex-start;background:#161D17;border-bottom-left-radius:4px}
+.msg.out{align-self:flex-end;background:linear-gradient(150deg,#1E3A26,#15301E);border-bottom-right-radius:4px}
+.msg.out .ticks{display:inline-block;margin-left:5px;font-size:10px;color:var(--glow);letter-spacing:-2px}
+.msg.sale{
+  align-self:center;max-width:92%;text-align:center;
+  background:rgba(197,225,161,.13);border:1px solid rgba(197,225,161,.38);color:var(--glow);
+  font-family:var(--mono);font-size:11px;letter-spacing:.05em;border-radius:11px;
+  box-shadow:0 0 36px rgba(197,225,161,.22),inset 0 1px 0 rgba(197,225,161,.18);
+}
+.typing{
+  align-self:flex-start;display:flex;gap:5px;padding:11px 13px;
+  background:#161D17;border-radius:14px;border-bottom-left-radius:4px;
+  opacity:0;animation:msgin .4s var(--ease) forwards;
+}
+.typing i{width:6px;height:6px;border-radius:50%;background:#555;animation:tp 1s ease-in-out infinite}
+.typing i:nth-child(2){animation-delay:.15s}.typing i:nth-child(3){animation-delay:.3s}
+@keyframes tp{0%,100%{opacity:.3;transform:translateY(0)}50%{opacity:1;transform:translateY(-4px)}}
+
+/* input bar */
+.wa-input{
+  display:flex;gap:8px;padding:10px 12px;
+  border-top:1px solid rgba(197,225,161,.08);background:rgba(197,225,161,.03);flex-shrink:0;
+}
+.wa-input .field{
+  flex:1;background:rgba(197,225,161,.08);border-radius:100px;
+  padding:8px 14px;font-size:11.5px;color:var(--faint);font-family:var(--body);
+  box-shadow:inset 0 2px 6px rgba(0,0,0,.4);
+}
+.wa-input .send{
+  width:34px;height:34px;border-radius:50%;background:var(--glow);
+  display:grid;place-items:center;color:#000;font-size:14px;
+  box-shadow:0 4px 14px rgba(197,225,161,.32);flex-shrink:0;
+}
+</style>
+</head>
+<body>
+
+<div class="ambient-wrap">
+  <div class="amb amb-a"></div>
+  <div class="amb amb-b"></div>
+</div>
+<div id="aura"></div>
+
+<div class="stage">
+  <div class="chip chip-1">⚡ <span>Lead calificado en <b>14s</b></span></div>
+  <div class="chip chip-2">🧠 <span>CRM AI · etiquetado <b>solo</b></span></div>
+  <div class="chip chip-3">💸 <span>Venta cerrada <b>$497</b></span></div>
+
+  <div class="phone" id="phone">
+    <div class="phone-shell">
+      <div class="phone-bezel">
+        <div class="screen">
+          <div class="dynamic-island"></div>
+          <div class="wa-head">
+            <div class="wa-ava">
+              <img src="https://i.pravatar.cc/80?img=12" alt="Bruno">
+            </div>
+            <div>
+              <div class="wa-name">Tu Marca</div>
+              <div class="wa-status">vendiendo ahora</div>
+            </div>
+          </div>
+          <div class="wa-body" id="waBody" aria-live="polite"></div>
+          <div class="wa-input">
+            <div class="field">Bruno está escribiendo…</div>
+            <div class="send">➤</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+const reduced = matchMedia('(prefers-reduced-motion:reduce)').matches;
+const $ = s => document.querySelector(s);
+
+/* aura */
+const aura = $('#aura');
+if(!reduced){
+  let ax=innerWidth/2,ay=innerHeight/2,tx=ax,ty=ay;
+  addEventListener('mousemove',e=>{tx=e.clientX;ty=e.clientY},{passive:true});
+  (function loop(){
+    ax+=(tx-ax)*.08;ay+=(ty-ay)*.08;
+    aura.style.left=ax+'px';aura.style.top=ay+'px';
+    requestAnimationFrame(loop);
+  })();
+}
+
+/* phone 3D tilt */
+const phone=$('#phone');
+const stage=document.querySelector('.stage');
+if(!reduced && matchMedia('(hover:hover)').matches){
+  stage.addEventListener('mousemove',e=>{
+    const r=stage.getBoundingClientRect();
+    const x=(e.clientX-r.left)/r.width-.5, y=(e.clientY-r.top)/r.height-.5;
+    phone.style.transform=`rotateY(${-9+x*12}deg) rotateX(${4-y*10}deg) translateZ(8px)`;
+  });
+  stage.addEventListener('mouseleave',()=>phone.style.transform='');
+}
+
+/* chat loop */
+const waBody=$('#waBody');
+const script=[
+  {t:'in',  txt:'Hola! vi el anuncio pero no sé si esto es para mí 😅'},
+  {t:'out', txt:'Hola Caro! 👋 Cuéntame — ¿qué vendes tú? (Spoiler: si la respuesta es "algo", Zetty lo cierra 😄)'},
+  {t:'in',  txt:'Jaja tengo un curso de finanzas personales, $197. Pero siento que la gente llega, pregunta y desaparece'},
+  {t:'out', txt:'Ah, el clásico "me interesa mucho" seguido de silencio eterno 😂 Eso se llama lead fantasma. Y Zetty los resucita.'},
+  {t:'in',  txt:'😂😂 exacto!! ¿pero cómo?'},
+  {t:'out', txt:'Cuando alguien pregunta, Zetty responde en segundos, califica si puede pagar, maneja la objeción del precio antes de que la digan... y manda el link. Sin que tú toques el teléfono.'},
+  {t:'in',  txt:'Espera, ¿en serio no tengo que hacer nada?'},
+  {t:'out', txt:'Nada. Ni un mensaje, ni un "hola!" de cortesía. Tú vives tu vida y Zetty vende. Algunos clientes se enteran de que cerraron una venta hasta que ven la notificación 🤭'},
+  {t:'in',  txt:'¿cuánto cuesta?'},
+  {t:'out', txt:'Menos de lo que pierdes cada vez que un lead te deja en visto 👀 ¿Te paso los planes?'},
+  {t:'in',  txt:'Sí mándamelo'},
+  {t:'out', txt:'Aquí va 👇 zetty.link/caro-planes — el Plan Core incluye todas las features ya trabajando por ti desde el día 1. ¿Lista para celebrar tus primeras ventas? 🥂'},
+  {t:'in',  txt:'Wow pues de una. 🔥'},
+  {t:'sale',txt:'✓ Venta cerrada · $497 · CRM actualizado'}
+];
+
+const wait=ms=>new Promise(r=>setTimeout(r,ms));
+
+async function chatLoop(){
+  while(true){
+    waBody.innerHTML='';
+    await wait(700);
+    for(const m of script){
+      if(m.t==='out'||m.t==='sale'){
+        const ty=document.createElement('div');
+        ty.className='typing';ty.innerHTML='<i></i><i></i><i></i>';
+        waBody.appendChild(ty);
+        await wait(m.t==='sale'?700:1300);
+        ty.remove();
+      }
+      const el=document.createElement('div');
+      el.className='msg '+m.t;
+      el.innerHTML=m.txt+(m.t==='out'?'<span class="ticks">✓✓</span>':'');
+      waBody.appendChild(el);
+      while(waBody.children.length>8)waBody.firstChild.remove();
+      await wait(m.t==='in'?2200:2800);
+    }
+    await wait(4000);
+  }
+}
+
+if(!reduced) chatLoop();
+else{
+  script.forEach(m=>{
+    const el=document.createElement('div');
+    el.className='msg '+m.t;el.style.cssText='opacity:1;transform:none;animation:none';
+    el.textContent=m.txt;waBody.appendChild(el);
+  });
+}
+})();
+</script>
+</body>
+</html>
