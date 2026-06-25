@@ -910,7 +910,26 @@ footer{border-top:1px solid var(--line-soft);padding:44px clamp(20px,5vw,64px);p
   opacity:1;
 }
 
-@media(max-width:980px){.hero-stage{display:none}}
+/* En móvil/tablet el hero pasa a 1 columna: mostramos el stage de paneles
+   flotantes debajo del título, escalado para caber (mantiene la composición de desktop).
+   Usamos zoom (no transform) para que el layout se reduzca de verdad y no desborde. */
+@media(max-width:980px){
+  #hero{overflow-x:clip}
+  .hero-stage{
+    display:block;
+    position:relative;
+    width:460px;height:560px;
+    margin:34px auto 0;
+    zoom:.66;
+    pointer-events:none;
+  }
+}
+@media(max-width:560px){
+  .hero-stage{zoom:.6;margin:26px auto 0}
+}
+@media(max-width:380px){
+  .hero-stage{zoom:.54}
+}
 
 .hs-layer{position:absolute;will-change:transform}
 
