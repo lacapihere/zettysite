@@ -911,15 +911,25 @@ footer{border-top:1px solid var(--line-soft);padding:44px clamp(20px,5vw,64px);p
 }
 
 /* En móvil/tablet el hero pasa a 1 columna: mostramos el stage de paneles
-   flotantes debajo del título, escalado para caber (mantiene la composición de desktop).
-   Usamos zoom (no transform) para que el layout se reduzca de verdad y no desborde. */
+   flotantes JUSTO debajo del título (no al final del hero), escalado para caber.
+   - zoom (no transform) reduce el layout de verdad y no desborda.
+   - display:contents disuelve el div de texto para poder reordenar con flex order. */
 @media(max-width:980px){
-  #hero{overflow-x:clip}
+  #hero{overflow-x:clip;align-items:flex-start}
+  #hero .wrap{display:flex;flex-direction:column;align-items:stretch}
+  #hero .wrap > div:first-child{display:contents}
+  #hero .hero-kicker{order:1}
+  #hero h1{order:2}
+  #hero .hero-stage{order:3}
+  #hero .hero-sub{order:4}
+  #hero .hero-ctas{order:5}
+  #hero .hero-note{order:6}
   .hero-stage{
     display:block;
     position:relative;
+    align-self:center;
     width:460px;height:560px;
-    margin:34px auto 0;
+    margin:24px auto 8px;
     zoom:.66;
     pointer-events:none;
   }
