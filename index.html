@@ -2526,9 +2526,9 @@ footer{border-top:1px solid var(--line-soft);padding:44px clamp(20px,5vw,64px);p
         </div>
         <div class="gc-days">
           <div class="gc-day"><span>L</span><button type="button" data-weekday="1" disabled>--</button></div>
-          <div class="gc-day"><span>M</span><button type="button" class="available" data-weekday="2" data-slot-title="Martes 7:00 PM" data-slot-meta="Demo en Vivo · Hora Miami">--</button></div>
+          <div class="gc-day"><span>M</span><button type="button" class="available" data-weekday="2" data-slot-title="Martes 11:00 AM" data-slot-meta="Demo en Vivo · Hora Colombia">--</button></div>
           <div class="gc-day"><span>M</span><button type="button" data-weekday="3" disabled>--</button></div>
-          <div class="gc-day"><span>J</span><button type="button" class="sold-out" data-weekday="4" data-slot-title="Jueves 10:30 am" data-slot-meta="Demo en Vivo Hora Miami" data-sold-out-message="Cupos Agotados">--</button></div>
+          <div class="gc-day"><span>J</span><button type="button" class="sold-out" data-weekday="4" data-slot-title="Jueves 11:00 AM" data-slot-meta="Demo en Vivo · Hora Colombia" data-sold-out-message="Cupos Agotados">--</button></div>
           <div class="gc-day"><span>V</span><button type="button" data-weekday="5" disabled>--</button></div>
           <div class="gc-day"><span>S</span><button type="button" data-weekday="6" disabled>--</button></div>
           <div class="gc-day"><span>D</span><button type="button" data-weekday="7" disabled>--</button></div>
@@ -2536,7 +2536,7 @@ footer{border-top:1px solid var(--line-soft);padding:44px clamp(20px,5vw,64px);p
         <div class="gc-footer">
           <div class="gc-slot">
             <strong>Selecciona una fecha</strong>
-            <span>Demo en Vivo · Hora Miami</span>
+            <span>Demo en Vivo · Hora Colombia</span>
             <em class="gc-slot-msg" id="demoSlotMsg">Primero elige una fecha.</em>
           </div>
           <button type="button" class="gc-mini-btn" id="demoReserveBtn">Reservar cupo</button>
@@ -2803,8 +2803,8 @@ playChat();
       btn.dataset.isoDate = date.toISOString().slice(0,10);
       if(btn.classList.contains('available')){
         var endDate = new Date(date);
-        btn.dataset.slotTitle = 'Martes 7:00 PM';
-        btn.dataset.slotMeta = 'Demo en Vivo · Hora Miami';
+        btn.dataset.slotTitle = 'Martes 11:00 AM';
+        btn.dataset.slotMeta = 'Demo en Vivo · Hora Colombia';
         btn.dataset.calendarStart = formatCalendarDate(date, 19, 0);
         btn.dataset.calendarEnd = formatCalendarDate(endDate, 19, 45);
         btn.dataset.reserveLabel = 'Reservar martes ' + date.getDate();
